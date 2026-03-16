@@ -31,3 +31,6 @@ Thumbs.db
 *.sqlite
 output/
 reports/
+
+# Windows 작업 스케줄러용 배치 파일 (로컬 환경 경로 포함)
+run_report.bat
