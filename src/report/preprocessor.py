@@ -127,7 +127,7 @@ def _build_summary_text(
         
         line = f"- [{date}] {title}"
         if status:
-            liene += f" | 상태: {status}"
+            line += f" | 상태: {status}"
         if tags:
             line += f" | 태그: {tags}"
         if memo:

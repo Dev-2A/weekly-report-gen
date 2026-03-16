@@ -31,16 +31,16 @@ class NotionClient:
                 filter={
                     "and": [
                         {
-                            "property": "날짜",
+                            "property": "Date",
                             "date": {"on_or_after": start_date},
                         },
                         {
-                            "property": "날짜",
+                            "property": "Date",
                             "date": {"on_or_before": end_date},
                         },
                     ]
                 },
-                sorts=[{"property": "날짜", "direction": "ascending"}],
+                sorts=[{"property": "Date", "direction": "ascending"}],
                 start_cursor=next_cursor,
             )
             
