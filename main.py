@@ -2,6 +2,7 @@ import click
 from src.pipeline import WeeklyReportPipeline
 from src.config import load_config
 from src.report import ReportSummary, get_week_range, get_week_label
+from src.scheduler import start_scheduler, run_weekly_report
 
 
 @click.group()
@@ -146,6 +147,54 @@ def info():
         click.echo(f"  {label}: {week_label}  ({start} ~ {end})")
     
     click.echo()
+
+
+# ── 5. schedule: 스케줄러 실행 ──────────────────────────────────
+
+
+@cli.command()
+@click.option(
+    "--weekday", "-d",
+    default="monday",
+    show_default=True,
+    type=click.Choice(
+        ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"],
+        case_sensitive=False,
+    ),
+    help="리포트를 생성할 요일",
+)
+@click.option(
+    "--hour", "-H",
+    default=9,
+    show_default=True,
+    type=click.IntRange(0, 23),
+    help="실행 시각 (시, 0~23)",
+)
+@click.option(
+    "--minute", "-M",
+    default=0,
+    show_default=True,
+    type=click.IntRange(0, 59),
+    help="실행 시각 (분, 0~59)",
+)
+@click.option(
+    "--run-now",
+    is_flag=True,
+    default=False,
+    help="스케줄 등록 전에 즉시 한 번 실행합니다.",
+)
+def scheduler(weekday, hour, minute, run_now):
+    """매주 지정한 요일/시각에 자동으로 회고 리포트를 생성합니다."""
+    try:
+        if run_now:
+            click.echo("▶️  즉시 실행 후 스케줄러를 시작합니다...\n")
+            run_weekly_report(week_offset=1)
+
+        start_scheduler(weekday=weekday, hour=hour, minute=minute)
+
+    except EnvironmentError as e:
+        click.echo(f"\n❌ 환경 변수 오류:\n{e}", err=True)
+        raise SystemExit(1)
 
 
 if __name__ == "__main__":
